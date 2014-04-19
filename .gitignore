@@ -1,0 +1,16 @@
+###Visual Studio Crap###
+*.suo
+*.user
+
+# Build Results 
+bin/
+obj/
+refs/
+*.pdb
+
+# OS generated files
+.DS_STORE
+._.Trashes
+.Trashes/
+Thumbs.db
+ehthumbs.db
