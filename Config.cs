@@ -14,7 +14,8 @@ namespace TweetShock
         public string UserAccessSecret = "";
         public string ConsumerKey = "";
         public string ConsumerSecret = "";
-        public string InitializeMessageTemplate = "Server is now online! IP: {0} PORT: {1}";
+        public bool InitializeMessage = true;
+        public string InitializeMessageTemplate = "Server is now online! IP: {ip} Port: {port}";
 
         public void Write(string path)
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
@@ -79,13 +80,24 @@ namespace TweetShock
         }
         public void OnPostInitialize(EventArgs e)
         {
-
+            if(!Config.InitializeMessage)
+                return;
+            string msg = Config.InitializeMessageTemplate.Replace("{ip}", Netplay.serverIP.ToString()).Replace("{port}", Netplay.serverPort.ToString());
+            string error;
+            SendTweet(msg, out error);
         }
         void SendTweet(CommandArgs e)
         {
             string msg = string.Join(" ", e.Parameters);
-            Tweet.PublishTweet(msg);
-            
+            string error;
+            if (!SendTweet(msg, out error))
+            {
+                e.Player.SendErrorMessage("Tweet failed to post. Reason: " + error);
+            }
+            else
+            {
+                e.Player.SendSuccessMessage("Tweet posted successfully!");
+            }
         }
         bool SendTweet(string msg, out string error)
         {
