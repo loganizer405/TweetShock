@@ -15,7 +15,7 @@ using Tweetinvi.Core;
 
 namespace TweetShock
 {
-    [ApiVersion(1, 15)]
+    [ApiVersion(1, 16)]
     public class TweetShock : TerrariaPlugin
     {
         string path = Path.Combine(TShock.SavePath, "TweetShock.json");
