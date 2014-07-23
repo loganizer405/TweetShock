@@ -74,7 +74,7 @@ namespace TweetShock
                 Config.Write(path);
             }
             Config = Config.Read(path);
-            TwitterCredentials.SetCredentials("UserAccessToken", "UserAccessSecret", "ConsumerKey", "ConsumerSecret");
+            TwitterCredentials.SetCredentials(Config.UserAccessToken, Config.UserAccessSecret, Config.ConsumerKey, Config.ConsumerSecret);
             //add commands here
             Commands.ChatCommands.Add(new Command("tweet.tweet", SendTweet, "tweet"));
         }
