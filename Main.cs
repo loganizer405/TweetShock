@@ -74,9 +74,14 @@ namespace TweetShock
                 Config.Write(path);
             }
             Config = Config.Read(path);
-            TwitterCredentials.SetCredentials(Config.UserAccessToken, Config.UserAccessSecret, Config.ConsumerKey, Config.ConsumerSecret);
-            //add commands here
-            Commands.ChatCommands.Add(new Command("tweet.tweet", SendTweet, "tweet"));
+            if (string.IsNullOrEmpty(Config.ConsumerKey))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Twitter keys not set for TweetShock plugin! Plugin will not load!");
+                Console.ResetColor();
+                TwitterCredentials.SetCredentials(Config.UserAccessToken, Config.UserAccessSecret, Config.ConsumerKey, Config.ConsumerSecret);
+                Commands.ChatCommands.Add(new Command("tweet.tweet", SendTweet, "tweet"));
+            }
         }
         public void OnPostInitialize(EventArgs e)
         {
