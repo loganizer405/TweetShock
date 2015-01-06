@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Net;
 using Terraria;
@@ -10,7 +7,6 @@ using TerrariaApi.Server;
 using TShockAPI;
 using Newtonsoft.Json;
 using Tweetinvi;
-using Tweetinvi.Core;
 
 
 namespace TweetShock
@@ -78,31 +74,34 @@ namespace TweetShock
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Twitter keys not set for TweetShock plugin! Plugin will not load!");
-                Console.ResetColor();
-                TwitterCredentials.SetCredentials(Config.UserAccessToken, Config.UserAccessSecret, Config.ConsumerKey, Config.ConsumerSecret);
-                Commands.ChatCommands.Add(new Command("tweet.tweet", SendTweet, "tweet"));
+                Console.ResetColor();              
             }
+            TwitterCredentials.SetCredentials(Config.UserAccessToken, Config.UserAccessSecret, Config.ConsumerKey, Config.ConsumerSecret);
+            Commands.ChatCommands.Add(new Command("tweet.tweet", SendTweet, "tweet"));
         }
         public void OnPostInitialize(EventArgs e)
         {
-            if(!Config.InitializeMessage)
+            if (!Config.InitializeMessage)
                 return;
-            string msg = Config.InitializeMessageTemplate.Replace("{ip}", Netplay.serverIP.ToString()).Replace("{port}", Netplay.serverPort.ToString());
+            string msg = Config.InitializeMessageTemplate.Replace("{ip}", Terraria.Netplay.serverIP.ToString()).Replace("{port}", Netplay.serverPort.ToString());
             string error;
-            SendTweet(msg, out error);
+            if (!SendTweet(msg, out error))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(("Tweet failed to post. Reason: " + error));
+                Console.ResetColor();
+            }
+            else
+                Console.WriteLine("Tweet posted successfully!");
         }
-        void SendTweet(CommandArgs e)
+        void SendTweet(CommandArgs e) //This is the command.
         {
             string msg = string.Join(" ", e.Parameters);
             string error;
             if (!SendTweet(msg, out error))
-            {
                 e.Player.SendErrorMessage("Tweet failed to post. Reason: " + error);
-            }
             else
-            {
                 e.Player.SendSuccessMessage("Tweet posted successfully!");
-            }
         }
         bool SendTweet(string msg, out string error)
         {
